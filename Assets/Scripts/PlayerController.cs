@@ -9,10 +9,16 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float _moveSpeed = 400f;
     [SerializeField] private Animator _animator;
 
+    [SerializeField] private GameObject _bulletPrefab;
+    [SerializeField] private BulletData _bulletData;
+
+    [SerializeField] private AudioSource _audioFootsteps;
+
     private int _direction = 0;
     private Vector2 _velocity;
-
     private bool _isShooting = false;
+
+    public int _bulletIndex = 0;
 
     private void Update()
     {
@@ -46,6 +52,7 @@ public class PlayerController : MonoBehaviour
                 _isShooting = true;
                 _animator.SetTrigger("Shoot");
                 _rigidBody.constraints = RigidbodyConstraints2D.FreezePositionX;
+                ShootProjectile();
             }
         }
     }
@@ -62,9 +69,25 @@ public class PlayerController : MonoBehaviour
         _rigidBody.velocity = _velocity;
     }
 
+    private void ShootProjectile()
+    {
+        GameObject go = Instantiate(_bulletPrefab, transform.position, Quaternion.identity);
+        Projectile script = go.GetComponent<Projectile>();
+
+        Vector3 direction = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
+        direction.z = 0;
+
+        script.Init(direction.normalized, _bulletData._bullets[_bulletIndex]);
+    }
+
     public void CanShoot()
     {
         _rigidBody.constraints = RigidbodyConstraints2D.None;
         _isShooting = false;
+    }
+
+    public void Footsteps()
+    {
+        _audioFootsteps.Play();
     }
 }
