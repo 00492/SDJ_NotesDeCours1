@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -19,6 +20,14 @@ public class PlayerController : MonoBehaviour
     private bool _isShooting = false;
 
     public int _bulletIndex = 0;
+
+    public static Action<int> _onKill;
+    public static Action _onPlayerHit;
+
+    private void Start()
+    {
+        _onPlayerHit += HitFeedback;
+    }
 
     private void Update()
     {
@@ -55,6 +64,10 @@ public class PlayerController : MonoBehaviour
                 ShootProjectile();
             }
         }
+        else if(Input.GetMouseButtonDown(1))
+        {
+            _onPlayerHit?.Invoke();
+        }
     }
 
     private void FixedUpdate()
@@ -89,5 +102,15 @@ public class PlayerController : MonoBehaviour
     public void Footsteps()
     {
         _audioFootsteps.Play();
+    }
+
+    private void HitFeedback()
+    {
+        transform.localScale /= 1.2f;
+    }
+
+    private void OnDestroy()
+    {
+        _onPlayerHit -= HitFeedback;
     }
 }

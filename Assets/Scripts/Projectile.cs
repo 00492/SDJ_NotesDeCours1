@@ -41,4 +41,14 @@ public class Projectile : MonoBehaviour
 
         Destroy(gameObject);
     }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if(other.gameObject.layer == LayerMask.NameToLayer("Enemy"))
+        {
+            Enemy script = other.gameObject.GetComponent<Enemy>();
+            script.TakeDamage(_bullet._damage);
+            Destroy(gameObject);
+        }
+    }
 }

@@ -5,6 +5,12 @@ using UnityEngine;
 
 public class DialogueExample : MonoBehaviour
 {
+
+    public DialogueData _firstDialogue;
+    public List<DialogueData> _secondDialogue = new List<DialogueData>();
+
+    public int _secondDialogueIndex;
+
     [SerializeField] private TextMeshProUGUI _tmproQuestion;
     [SerializeField] private TextMeshProUGUI _tmproAnswer;
     [SerializeField] private DialogueData _data;
