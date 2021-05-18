@@ -59,7 +59,7 @@ public class SomePlayer : MonoBehaviour
 
     private void OnDisable()
     {
-        if (EventManager.Instance)
+        if (EventManager.Instance != null)
         {
             EventManager.Instance.UnregisterEvent(EventID.SaveGame, OnSaveGame);
             EventManager.Instance.UnregisterEvent(EventID.LoadGame, OnLoadGame);

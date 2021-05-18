@@ -10,11 +10,16 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float _moveSpeed = 400f;
     [SerializeField] private Animator _animator;
 
+    [Header("Bullets")]
     [SerializeField] private GameObject _bulletPrefab;
     [SerializeField] private BulletData _bulletData;
+    [SerializeField] private Pool _bulletPool;
 
+    [Header("Audio")]
     [SerializeField] private AudioSource _audioFootsteps;
-
+    [SerializeField] private AudioPool _audioPool;
+    [SerializeField] private AudioClip _shootClip;
+        
     private int _direction = 0;
     private Vector2 _velocity;
     private bool _isShooting = false;
@@ -56,7 +61,7 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
-            if (!_isShooting)
+            //if (!_isShooting)
             {
                 _isShooting = true;
                 _animator.SetTrigger("Shoot");
@@ -84,12 +89,18 @@ public class PlayerController : MonoBehaviour
 
     private void ShootProjectile()
     {
-        GameObject go = Instantiate(_bulletPrefab, transform.position, Quaternion.identity);
-        Projectile script = go.GetComponent<Projectile>();
+        //GameObject go = Instantiate(_bulletPrefab, transform.position, Quaternion.identity);
+        // Fetch bullet from pool
+        PoolItem go = _bulletPool.GetAPoolObject();
+        go.transform.position = transform.position;
 
+        // Play clip from pool
+        _audioPool.PlaySFX(_shootClip, transform.position);
+
+        // Initialize projectile
+        Projectile script = go.GetComponent<Projectile>();
         Vector3 direction = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
         direction.z = 0;
-
         script.Init(direction.normalized, _bulletData._bullets[_bulletIndex]);
     }
 
