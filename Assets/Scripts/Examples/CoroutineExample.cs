@@ -73,4 +73,19 @@ public class CoroutineExample : MonoBehaviour
             StartCoroutine(LerpToPosition());
         }
     }
+
+    private IEnumerator TextRoutine()
+    {
+        string dialog = "dialogueString";
+
+        string toPrint = "";
+
+        for(int i = 0; i < dialog.Length; i++)
+        {
+            toPrint += dialog[i];
+
+            yield return new WaitForSeconds(0.05f);
+        }
+
+    }
 }
